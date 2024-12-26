@@ -1,8 +1,8 @@
-import { Injectable, OnModuleDestroy } from "@nestjs/common";
+import { Injectable } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
 import { TypeOrmModuleOptions, TypeOrmOptionsFactory } from "@nestjs/typeorm";
 import { AllConfigTypes } from "src/config/config.types";
-import { DataSource, DataSourceOptions} from "typeorm";
+import { DataSource} from "typeorm";
 
 
 @Injectable()

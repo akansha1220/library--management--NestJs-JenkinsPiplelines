@@ -1,8 +1,8 @@
-import { IsEmail, IsNotEmpty, MinLength,IsEnum } from 'class-validator';
-import { Role } from '../entities/user.entity';
+import { IsEmail, IsNotEmpty, MinLength,IsEnum, IsString,  IsPhoneNumber } from 'class-validator';
+import { Role } from 'src/auth/enum/role.enum';
 
 
-export class userloginDTO{
+export class UserLoginDTO{
 
     @IsEmail()
     @IsNotEmpty()
@@ -29,4 +29,14 @@ export class CreateUserDTO{
     @IsEnum(Role, { message: 'Role must be either student or teacher' })
     role: Role;
 
+    @IsNotEmpty()
+    @IsString()
+    address:string;
+
+    
+    @IsPhoneNumber('IN')
+    phone:string;
+
 }
+
+

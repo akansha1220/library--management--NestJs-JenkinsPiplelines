@@ -1,41 +1,45 @@
 import {  Injectable,UnauthorizedException } from "@nestjs/common";
-import * as bcrypt from 'bcryptjs';
 import { Repository } from "typeorm";
 import { InjectRepository } from "@nestjs/typeorm";
 import { User } from './entities/user.entity';
 import { CreateUserDTO } from "./dto/User.dto";
+import { Authentication } from "src/auth/entities/authentication.entity";
+import {hashPassword} from 'src/utils/common.utils'
 
 @Injectable()
 
 export class UsersService{
-
     constructor(
         @InjectRepository(User) 
-        private readonly userRepository: Repository<User>
+        private readonly userRepository: Repository<User>,
+        @InjectRepository(Authentication) 
+        private readonly authRepository: Repository<Authentication>
     ){}
-    
-    async loginValidator(email:string,password:string) : Promise <any|null>{
-        const user = await this.userRepository.findOneBy({email});
-        if (!user || !(await bcrypt.compare(password, user.password))) {
-            throw new UnauthorizedException('Invalid email or password');}
-        return { message: 'Login successful' };
-    }
 
-    async createUserValidator(newUser:CreateUserDTO) : Promise <User>{
-        const {email,password,name,role}=newUser
-        const user = await this.userRepository.findOneBy({email});
-        if (user) {
-            throw new UnauthorizedException('This email is already in use');
-        }
+    async findUserByEmail(email:string): Promise<User> {
+		const user = await this.userRepository.findOneBy({email});
+		return user;
+	}
+
+    async signup(newUser:CreateUserDTO) : Promise <User>{
+        const {email,password,name,role,address,phone}=newUser;
+                   
+        const hashedPassword = await hashPassword(password)
+        const newauth = await this.authRepository.create({
+            password:hashedPassword,
+            username:email,
+            role:role,
+            lastPassword:[hashedPassword],
+        })
         
-        const hashedPassword = await bcrypt.hash(password, 10);
-        const newuser = await this.userRepository.create({
+        const auth = await this.authRepository.save(newauth);
+        const newuser =  this.userRepository.create({
             email,
             name,
-            password:hashedPassword,
-            role
+            address,
+            phone,
+            authId:auth.id,
         });
-
         return await this.userRepository.save(newuser);
     }
 
@@ -43,8 +47,8 @@ export class UsersService{
         throw new Error("Method not implemented.");
     }
 
-    async findOne(id: number):Promise<User> {
-        const user = await this.userRepository.findOne({ where: { id } });
+    async findOne(email: string):Promise<User> {
+        const user = await this.userRepository.findOne({ where: { email} });
         if (!user) {
             throw new UnauthorizedException('This email is already in use');
         }    

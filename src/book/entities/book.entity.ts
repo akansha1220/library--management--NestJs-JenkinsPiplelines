@@ -1,19 +1,35 @@
-import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
+import { Column, CreateDateColumn, DeleteDateColumn, Entity, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
 import { BookHistory } from "./bookhistory.entity";
+import { BookStatusEnum } from "../enums/bookstatus.enum";
 
 
-@Entity()
+@Entity('book')
 export class Book {
-  @PrimaryGeneratedColumn()
-  bookId: number;
+  @PrimaryGeneratedColumn('uuid')
+  id: string;
 
-  @Column({unique:true})
+  @Column({name:'title',type:'varchar'})
   title: string;
 
-  @Column()
+  @Column({name:'author',type:'varchar'})
   author: string;
 
-  @OneToMany(() => BookHistory, (history) => history.book)
+  @Column({unique:true,name:'isbno',type :"varchar"})
+  isbno:string;
+
+  @CreateDateColumn()
+  createdAt:Date;
+
+  @UpdateDateColumn()
+  updatedAt:Date;
+
+  @DeleteDateColumn()
+  deletedAt:Date;
+
+  @Column({ type: 'enum', enum:BookStatusEnum,default:BookStatusEnum.AVAILABLE})
+  status:BookStatusEnum;
+
+  @OneToMany(() => BookHistory, (history) => history.isbno)
   history: BookHistory[];
 }
 

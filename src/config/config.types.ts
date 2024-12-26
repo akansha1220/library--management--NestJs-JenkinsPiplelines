@@ -4,6 +4,7 @@ export type AppConfig = {
     workingDirectory: string;
     apiPrefix: string;
     port: number;
+
 }
 
 export type DatabaseConfig = {
@@ -20,7 +21,16 @@ export type DatabaseConfig = {
     rejectUnauthorize: boolean;
 }
 
+export type AuthConfig = {
+    expires:string;
+    secret:string;
+    refreshSecret:string;
+    refreshExpires:string;
+
+}
+
 export type AllConfigTypes={
     database: DatabaseConfig;
     app: AppConfig;
+    auth:AuthConfig;
 }

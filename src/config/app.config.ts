@@ -27,6 +27,8 @@ export class EnvironmentVariableValidators {
     @IsString()
     @IsNotEmpty()
     APP_API_PREFIX:string;
+
+    
 }
 
 export default registerAs<AppConfig>('app',() => {
@@ -38,7 +40,8 @@ export default registerAs<AppConfig>('app',() => {
         port : parseInt(process.env.APP_PORT)  ,
         workingDirectory : process.env.PWD || process.cwd(),
         name : process.env.APP_NAME,
-        apiPrefix : process.env.APP_API_PREFIX
+        apiPrefix : process.env.APP_API_PREFIX,
+
     }
 })
 

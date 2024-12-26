@@ -1,18 +1,19 @@
-import { IsDate, IsEnum, IsIn,  IsInt,  IsNotEmpty, IsOptional, IsString } from "class-validator";
-import { Book } from "../entities/book.entity";
+import { IsDate, IsEmpty, IsEnum, IsIn,  IsInt,  IsNotEmpty, IsOptional, IsString } from "class-validator";
 import { Type } from "class-transformer";
+import { Optional } from "@nestjs/common";
 
-enum Status{
-    ISSUED='issued',
-    AVAILABLE = 'available'
-}
+
 export class CreateBookDto {
 
     @IsNotEmpty()
     title:string;
 
+    
     @IsNotEmpty()
     author:string;
+
+    @IsNotEmpty()
+    isbno:string;
     
 }
 
@@ -22,7 +23,7 @@ export class BookHistoryDto {
     
   @IsString()
   @IsNotEmpty()
-  title: string; // Assuming you want to get book name for the input
+  bookid: string; // Assuming you want to get book name for the input
 
   @IsDate()
   @IsNotEmpty()
@@ -33,52 +34,37 @@ export class BookHistoryDto {
 
   
   @IsNotEmpty()
-  issuedTo: number;
+  issuedTo: string;
 
   
   @IsNotEmpty()
-  issuedBy: number;
+  issuedBy: string;
 
-  @IsIn(Object.keys(Status))
-  status: Status;
     
 }
 
 export class BookIssueDTO{
+  
+    @IsNotEmpty()
     @IsString()
-    @IsNotEmpty()
-    title: string; // Book title or name
-  
-    @IsDate()
-    @Type(() => Date) 
-    @IsNotEmpty()
-    issuedDate: Date;
-  
+    isbno:string;
 
     @IsNotEmpty()
-    issueTo: number; // User to whom the book is issued
-  
+    @IsString()
+    issueTo:string;
 
-    status:'issued';
-
-    @IsOptional()
-    returnedate?: Date|null;
 }
 
 export class BookReturnDTO{
 
     @IsString()
     @IsNotEmpty()
-    title:string;
+    isbno:string;
 
-    @IsDate()
-    @Type(() => Date) 
-    @IsNotEmpty()
-    returnedDate:Date;
 
-    @IsInt()
+    @IsString()
     @IsNotEmpty()
-    issueTo: number; 
+    issueTo: string; 
 }
 
 
